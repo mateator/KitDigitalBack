@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum interes {
+  SITIO_WEB
+  PORTAL_DEL_EMPLEADO
+  UNSUBSCRIBED
+  ADDRESS_ISSUES
+  NOT_YET_ASKED
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  password     String
+  solicitud    Delegacion @relation(fields: [delegacionId], references: [id])
+  delegacionId Int
+}
+
+model Solicitud {
+  id            Int        @id @default(autoincrement())
+  asignado      Boolean    @default(false)
+  delegacion    Delegacion @relation(fields: [delegacionId], references: [id])
+  delegacionId  Int
+  comercial     String?
+  contactado    Boolean    @default(false)
+  presupuestado Boolean    @default(false)
+  tramitado     Boolean    @default(false)
+  cliente       String?
+  contacto      String?
+  telefono      Int?
+  email         String?
+  observaciones String?
+  interes       Interes[]
+}
+
+model Delegacion {
+  id        Int         @id @default(autoincrement())
+  ubicacion String
+  solicitud Solicitud[]
+  user      User[]
+}
+
+model Interes {
+  id    Int    @id @default(autoincrement())
+  tipo  String
+  tipos String
+
+  solicitudId Int
+  solicitud   Solicitud @relation(fields: [solicitudId], references: [id])
+}

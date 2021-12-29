@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import express from "express";
 import cors from "cors";
 import { NextFunction, Request, Response } from 'express';
-import HttpException from '@exceptions/HttpException';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -42,7 +41,7 @@ app.put('/solicitud/:id/edit' , async (req,res, next) => {
 
 app.post('/solicitud', async (req, res) => {
   console.log('s');
-  if ((req.body.delegacionId)) throw new HttpException(400, 'Necesitas logearte primero');
+  // if ((req.body.delegacionId)) throw new HttpException(400, 'Necesitas logearte primero');
 
   const solicitudes = await prisma.solicitud.findMany({
     where:{

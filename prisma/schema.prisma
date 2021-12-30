@@ -35,12 +35,13 @@ model Solicitud {
   contactado    Boolean    @default(false)
   presupuestado Boolean    @default(false)
   tramitado     Boolean    @default(false)
-  cliente       String?
-  contacto      String?
-  telefono      Int?
-  email         String?
+  cliente       String
+  contacto      String
+  telefono      Int
+  email         String
   observaciones String?
-  interes       Interes[]
+  solicitudInteres  SolicitudInteres[]
+
 }
 
 model Delegacion {
@@ -53,8 +54,13 @@ model Delegacion {
 model Interes {
   id    Int    @id @default(autoincrement())
   tipo  String
-  tipos String
+  solicitudInteres  SolicitudInteres[]
+}
 
-  solicitudId Int
+model SolicitudInteres {
+  id    Int    @id @default(autoincrement())
   solicitud   Solicitud @relation(fields: [solicitudId], references: [id])
+  interes  Interes @relation(fields: [interesId], references: [id])
+  solicitudId Int
+  interesId Int
 }

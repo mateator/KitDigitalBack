@@ -5,6 +5,7 @@ import HttpException from '@exceptions/HttpException';
 import {isEmpty} from '@utils/util';
 
 import { NextFunction, Request, Response } from 'express';
+import { networkInterfaces } from "os";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -14,7 +15,6 @@ app.use(cors({credentials: true, origin: true}));
 
 //SOLICITUD
 app.post('/solicitud/create' , async (req,res, next) => {
-  console.log(req.body);
   
   try {
     const data = await prisma.solicitud.create({
@@ -30,7 +30,7 @@ app.post('/solicitud/create' , async (req,res, next) => {
 }) 
 
 app.post('/solicitud/delete' , async (req,res, next) => {
-  if (isEmpty(req.body.id)) throw new HttpException(400, 'You\'re not assignedId');
+  if (isEmpty(req.body.id)) throw new HttpException(400, 'Error al eliminar campo');
 
   try {
     
@@ -62,19 +62,21 @@ app.put('/solicitud/:id/edit' , async (req,res, next) => {
 }) 
 
 app.post('/solicitud', async (req, res) => {
-  console.log('s');
-  // if ((req.body.delegacionId)) throw new HttpException(400, 'Necesitas logearte primero');
+  if (isEmpty(req.body.delegacionId)) throw new HttpException(400, 'Error al obtener solicitudes');
 
   const solicitudes = await prisma.solicitud.findMany({
     where:{
       delegacionId : req.body.delegacionId,
+    },
+    include:{
+      delegacion: true,
     }
+
   })
   res.json(solicitudes)
 })
 //USER
 app.post('/check', async (req, res) => {
-  console.log(req.body);
   
   const delegaciones = await prisma.user.findMany({
     where: {
@@ -91,17 +93,36 @@ app.post('/check', async (req, res) => {
   
 })
 
+//SOLICITUD-INTERES
+app.post('/solicitudInteres', async (req, res) => {
+  if (isEmpty(req.body.solicitudId) ) throw new HttpException(400, 'Error al obtener intereses de una solicitud');
+
+  const intereses = await prisma.solicitudInteres.findMany({
+    where:{
+      solicitud: {id : req.body.solicitudId}
+    },
+    select:{
+      interesId: true,
+    }
+  })
+  res.json(intereses)
+})
+
+//interes
+app.get('/interes', async (req, res) => {
+  
+  const intereses = await prisma.interes.findMany()
+  res.json(intereses)
+})
 //DELEGACION
 
 app.get('/delegacion', async (req, res) => {
-  console.log('s');
   
   const delegaciones = await prisma.delegacion.findMany()
   res.json(delegaciones)
 })
 
 app.get('/delegacion/:id', async (req, res) => {
-  console.log(req.params.id)
   const delegaciones = await prisma.delegacion.findMany({
     where: {
       id : parseInt(req.params.id) ,

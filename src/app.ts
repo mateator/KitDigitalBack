@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
 import cors from "cors";
+import HttpException from '@exceptions/HttpException';
+import {isEmpty} from '@utils/util';
+
 import { NextFunction, Request, Response } from 'express';
 
 const app = express();
@@ -11,6 +14,8 @@ app.use(cors({credentials: true, origin: true}));
 
 //SOLICITUD
 app.post('/solicitud/create' , async (req,res, next) => {
+  console.log(req.body);
+  
   try {
     const data = await prisma.solicitud.create({
       // data: {asignado: false, delegacionId: 1, comercial:"a", contactado:false, presupuestado:false, tramitado: false, cliente: "w", contacto: "w", telefono:213, email:"w", observaciones:"w"}
@@ -18,6 +23,23 @@ app.post('/solicitud/create' , async (req,res, next) => {
 
     })
     res.status(201).json({ data: data, message: 'created' });
+
+  } catch (error) {
+    next(error);
+  }
+}) 
+
+app.post('/solicitud/delete' , async (req,res, next) => {
+  if (isEmpty(req.body.id)) throw new HttpException(400, 'You\'re not assignedId');
+
+  try {
+    
+    const data = await prisma.solicitud.delete({
+      where: {
+        id: req.body.id
+      }
+    })
+    res.status(201).json({ data: data, message: 'deleted' });
 
   } catch (error) {
     next(error);
@@ -61,11 +83,12 @@ app.post('/check', async (req, res) => {
     }
   })
 
-  if(delegaciones.length > 0){
-    res.json(true)
+  if(delegaciones.length === 1){
+    res.json({login: true, delegacion: delegaciones[0].delegacionId})
   }else{
-    res.json(false)
+    res.json({login: false})
   }
+  
 })
 
 //DELEGACION

@@ -33,13 +33,12 @@ app.post('/solicitud/delete' , async (req,res, next) => {
   if (isEmpty(req.body.id)) throw new HttpException(400, 'Error al eliminar campo');
 
   try {
-    
     const data = await prisma.solicitud.delete({
       where: {
         id: req.body.id
       }
     })
-    res.status(201).json({ data: data, message: 'deleted' });
+    res.status(201).json({ message: 'deleted' });
 
   } catch (error) {
     next(error);

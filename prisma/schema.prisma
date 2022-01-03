@@ -65,7 +65,7 @@ model Interes {
 
 model SolicitudInteres {
   id          Int       @id @default(autoincrement())
-  solicitud   Solicitud @relation(fields: [solicitudId], references: [id])
+  solicitud   Solicitud @relation(fields: [solicitudId], references: [id], onDelete: Cascade)
   interes     Interes   @relation(fields: [interesId], references: [id])
   solicitudId Int
   interesId   Int

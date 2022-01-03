@@ -113,14 +113,7 @@ app.post('/solicitudInteres', async (req, res) => {
   res.json(intereses)
 })
 
-//interes
-app.get('/interes', async (req, res) => {
-  
-  const intereses = await prisma.interes.findMany()
-  res.json(intereses)
-})
-
-app.get('/interes/create', async (req, res) => {
+app.get('/solicitudInteres/create', async (req, res) => {
   
   const data = await prisma.solicitudInteres.create({
     data:{
@@ -130,6 +123,14 @@ app.get('/interes/create', async (req, res) => {
   })
   res.status(201).json({ data: data, message: 'created' });
 })
+
+//interes
+app.get('/interes', async (req, res) => {
+  
+  const intereses = await prisma.interes.findMany()
+  res.json(intereses)
+})
+
 //DELEGACION
 
 app.get('/delegacion', async (req, res) => {

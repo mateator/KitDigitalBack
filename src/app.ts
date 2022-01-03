@@ -70,6 +70,7 @@ app.post('/solicitud', async (req, res) => {
     },
     include:{
       delegacion: true,
+      solicitudInteres: true,
     }
 
   })

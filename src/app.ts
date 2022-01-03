@@ -78,15 +78,19 @@ app.post('/solicitud', async (req, res) => {
 //USER
 app.post('/check', async (req, res) => {
   
-  const delegaciones = await prisma.user.findMany({
+  const user = await prisma.user.findMany({
     where: {
       password: req.body?.password,
       email: req.body?.email
+    },
+    select:{
+      rol: true,
+      delegacionId: true,
     }
   })
 
-  if(delegaciones.length === 1){
-    res.json({login: true, delegacion: delegaciones[0].delegacionId})
+  if(user.length === 1){
+    res.json({login: true, user})
   }else{
     res.json({login: false})
   }
@@ -113,6 +117,17 @@ app.get('/interes', async (req, res) => {
   
   const intereses = await prisma.interes.findMany()
   res.json(intereses)
+})
+
+app.get('/interes/create', async (req, res) => {
+  
+  const data = await prisma.solicitudInteres.create({
+    data:{
+      solicitudId: req.body.idSolicitud,
+      interesId: req.body.idInteres,
+    }
+  })
+  res.status(201).json({ data: data, message: 'created' });
 })
 //DELEGACION
 

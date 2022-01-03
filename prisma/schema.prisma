@@ -18,29 +18,35 @@ enum interes {
   NOT_YET_ASKED
 }
 
+enum roles {
+  ADMIN
+  USER
+}
+
 model User {
   id           Int        @id @default(autoincrement())
   email        String     @unique
   password     String
   solicitud    Delegacion @relation(fields: [delegacionId], references: [id])
   delegacionId Int
+  rol          roles
 }
 
 model Solicitud {
-  id            Int        @id @default(autoincrement())
-  asignado      Boolean    @default(false)
-  delegacion    Delegacion @relation(fields: [delegacionId], references: [id])
-  delegacionId  Int
-  comercial     String?
-  contactado    Boolean    @default(false)
-  presupuestado Boolean    @default(false)
-  tramitado     Boolean    @default(false)
-  cliente       String
-  contacto      String
-  telefono      Int
-  email         String
-  observaciones String?
-  solicitudInteres  SolicitudInteres[]
+  id               Int                @id @default(autoincrement())
+  asignado         Boolean            @default(false)
+  delegacion       Delegacion         @relation(fields: [delegacionId], references: [id])
+  delegacionId     Int
+  comercial        String?
+  contactado       Boolean            @default(false)
+  presupuestado    Boolean            @default(false)
+  tramitado        Boolean            @default(false)
+  cliente          String
+  contacto         String
+  telefono         Int
+  email            String
+  observaciones    String?
+  solicitudInteres SolicitudInteres[]
 
 }
 
@@ -52,15 +58,15 @@ model Delegacion {
 }
 
 model Interes {
-  id    Int    @id @default(autoincrement())
-  tipo  String
-  solicitudInteres  SolicitudInteres[]
+  id               Int                @id @default(autoincrement())
+  tipo             String
+  solicitudInteres SolicitudInteres[]
 }
 
 model SolicitudInteres {
-  id    Int    @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   solicitud   Solicitud @relation(fields: [solicitudId], references: [id])
-  interes  Interes @relation(fields: [interesId], references: [id])
+  interes     Interes   @relation(fields: [interesId], references: [id])
   solicitudId Int
-  interesId Int
+  interesId   Int
 }

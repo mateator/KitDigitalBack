@@ -61,7 +61,6 @@ app.put('/solicitud/:id/edit' , async (req,res, next) => {
 }) 
 
 app.post('/solicitud', async (req, res) => {
-  if (isEmpty(req.body.delegacionId)) throw new HttpException(400, 'Error al obtener solicitudes');
 
   const solicitudes = await prisma.solicitud.findMany({
     where:{
@@ -112,7 +111,7 @@ app.post('/solicitudInteres', async (req, res) => {
   res.json(intereses)
 })
 
-app.get('/solicitudInteres/create', async (req, res) => {
+app.post('/solicitudInteres/create', async (req, res) => {
   
   const data = await prisma.solicitudInteres.create({
     data:{
@@ -122,6 +121,21 @@ app.get('/solicitudInteres/create', async (req, res) => {
   })
   res.status(201).json({ data: data, message: 'created' });
 })
+// WIP
+// app.put('/solicitudInteres/:id/edit' , async (req,res, next) => {
+//   try {
+//     const data = await prisma.solicitudInteres.update({
+//       where:{
+//         id : parseInt(req.params.id)
+//       },
+//       data: {id: parseInt(req.params.id)}
+//     })
+//     res.status(201).json({ data: data, message: 'edited' });
+
+//   } catch (error) {
+//     next(error);
+//   }
+// }) 
 
 //interes
 app.get('/interes', async (req, res) => {

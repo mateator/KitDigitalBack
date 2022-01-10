@@ -45,6 +45,7 @@ app.post('/solicitud/delete', async (req, res, next) => {
   }
 })
 
+
 app.put('/solicitud/:id/edit', async (req, res, next) => {
   try {
     const data = await prisma.solicitud.update({
@@ -60,19 +61,34 @@ app.put('/solicitud/:id/edit', async (req, res, next) => {
   }
 })
 
-app.post('/solicitud', async (req, res) => {
+app.post('/solicitud', async (req, res,next) => {
+  try {
+    const data = await prisma.solicitud.findMany({
+      where: {
+        asignado: req.body.asignado,
+        delegacion: {id: req.body.delegacionId},
+        comercial: {contains: req.body.comercial},
+        contactado: req.body.contactado,
+        presupuestado: req.body.presupuestado,
+        tramitado: req.body.tramitado, 
+        cliente: {contains: req.body.client},
+        solicitudInteres:{
+          some:{
+            interesId: req.body.interesId
+          }
+        }
+      },
+      include: {
+        delegacion: true,
+        solicitudInteres:true,
+      }
+    })
 
-  const solicitudes = await prisma.solicitud.findMany({
-    where: {
-      delegacionId: req.body.delegacionId,
-    },
-    include: {
-      delegacion: true,
-      solicitudInteres: true,
-    }
+    res.status(201).json(data);
 
-  })
-  res.json(solicitudes)
+  } catch (error) {
+    next(error);
+  }
 })
 //USER
 app.post('/check', async (req, res) => {
@@ -122,7 +138,26 @@ app.post('/solicitudInteres/create', async (req, res) => {
   res.status(201).json({ data: data, message: 'created' });
 })
 
+// changes: [{op: "remove", path: "/4", oldValue: 3}, {op: "replace", path: "/3", value: 5, oldValue: 2},…]
+// {op: "remove", path: "/4", oldValue: 3}
+// {op: "replace", path: "/3", value: 5, oldValue: 2} ,{op: "replace", path: "/1", value: 2, oldValue: 5}
+// {op: "replace", path: "/2", value: 4, oldValue: 4}
+// {op: "replace", path: "/1", value: 2, oldValue: 5}
 app.post('/solicitudInteres/edit', async (req, res, next) => {
+
+  // req.body.changes.map((data1: any,index: any)=>{
+  //   req.body.changes.map((data2: any) =>{
+  //     if(data2.oldValue === data1.value && data2.value === data1.oldValue && data2.path !== data1.path){
+  //       console.log(data1);
+  //       console.log('-----------------------');
+  //       req.body.changes.splice(index,index+1);
+  //       console.log(data2);
+  //       console.log('-----------------------');
+  //       console.log(index);
+        
+  //     }
+  //   })
+  // })
 
   req.body.changes.map(async (data: any) => {
     switch (data.op) {

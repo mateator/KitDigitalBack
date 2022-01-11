@@ -71,7 +71,7 @@ app.post('/solicitud', async (req, res,next) => {
         contactado: req.body.contactado,
         presupuestado: req.body.presupuestado,
         tramitado: req.body.tramitado, 
-        cliente: {contains: req.body.client},
+        cliente: {contains: req.body.cliente},
         solicitudInteres:{
           some:{
             interesId: req.body.interesId

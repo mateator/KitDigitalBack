@@ -8,6 +8,8 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl      = env("SHADOW_DATABASE_URL")
+
 }
 
 enum interes {
@@ -41,6 +43,7 @@ model Solicitud {
   contactado       Boolean            @default(false)
   presupuestado    Boolean            @default(false)
   tramitado        Boolean            @default(false)
+  agenteDigital    String?
   cliente          String
   contacto         String
   telefono         Int

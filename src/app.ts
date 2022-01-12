@@ -19,7 +19,7 @@ app.post('/solicitud/create', async (req, res, next) => {
   try {
     const data = await prisma.solicitud.create({
       // data: {asignado: false, delegacionId: 1, comercial:"a", contactado:false, presupuestado:false, tramitado: false, cliente: "w", contacto: "w", telefono:213, email:"w", observaciones:"w"}
-      data: { asignado: req.body.asignado, delegacionId: req.body.delegacionId, comercial: req.body.comercial, contactado: req.body.contactado, presupuestado: req.body.presupuestado, tramitado: req.body.tramitado, cliente: req.body.cliente, contacto: req.body.contacto, telefono: req.body.telefono, email: req.body.email, observaciones: req.body.observaciones }
+      data: { asignado: req.body.asignado, delegacionId: req.body.delegacionId, comercial: req.body.comercial, contactado: req.body.contactado, presupuestado: req.body.presupuestado, tramitado: req.body.tramitado, cliente: req.body.cliente, contacto: req.body.contacto, telefono: req.body.telefono, email: req.body.email, observaciones: req.body.observaciones, agenteDigital: req.body.agenteDigital }
 
     })
     res.status(201).json({ data: data, message: 'created' });
@@ -52,7 +52,7 @@ app.put('/solicitud/:id/edit', async (req, res, next) => {
       where: {
         id: parseInt(req.params.id)
       },
-      data: { asignado: req.body.asignado, delegacionId: req.body.delegacionId, comercial: req.body.comercial, contactado: req.body.contactado, presupuestado: req.body.presupuestado, tramitado: req.body.tramitado, cliente: req.body.cliente, contacto: req.body.contacto, telefono: req.body.telefono, email: req.body.email, observaciones: req.body.observaciones }
+      data: { asignado: req.body.asignado, delegacionId: req.body.delegacionId, comercial: req.body.comercial, contactado: req.body.contactado, presupuestado: req.body.presupuestado, tramitado: req.body.tramitado, cliente: req.body.cliente, contacto: req.body.contacto, telefono: req.body.telefono, email: req.body.email, observaciones: req.body.observaciones, agenteDigital: req.body.agenteDigital }
     })
     res.status(201).json({ data: data, message: 'edited' });
 
@@ -71,6 +71,7 @@ app.post('/solicitud', async (req, res,next) => {
         contactado: req.body.contactado,
         presupuestado: req.body.presupuestado,
         tramitado: req.body.tramitado, 
+        agenteDigital: req.body.agenteDigital,
         cliente: {contains: req.body.cliente},
         solicitudInteres:{
           some:{

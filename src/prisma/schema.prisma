@@ -9,7 +9,6 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
   shadowDatabaseUrl      = env("SHADOW_DATABASE_URL")
-
 }
 
 enum interes {
@@ -47,10 +46,13 @@ model Solicitud {
   cliente          String
   contacto         String
   telefono         Int
+  telefono2        Int?
+  localidad        String?
   email            String
-  observaciones    String?
+  observaciones    String?            @db.LongText
   solicitudInteres SolicitudInteres[]
-
+  segmento         String?
+  provincia        String?
 }
 
 model Delegacion {
